@@ -112,4 +112,16 @@ join payment on rental.rental_id=payment.rental_id
 group by 1 order by 1;
 
 ##19.How many distinct Renters do we have per month?
+select DATE_FORMAT(rental_date , '%m/%y') as rental_month,count(distinct customer_id) from rental
+group by 1 order by 1;
 
+##20.Show the Number of Distinct Film Rented Each Month
+select DATE_FORMAT(rental.rental_date , '%m/%y') as rental_month_year,
+count(distinct film.title) as distinct_film_count from rental join inventory 
+on 
+inventory.inventory_id=rental.inventory_id
+join film on film.film_id=inventory.film_id
+group by 1
+order by 1;
+
+##21.Number of Rentals in Comedy, Sports, and Family
