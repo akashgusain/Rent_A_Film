@@ -47,3 +47,69 @@ join rental on inventory.inventory_id=rental.inventory_id join payment on paymen
 order by 2 desc;
 
 ##10.Most Spending Customer so that we can send him/her rewards or debate points
+
+select customer.customer_id ,concat(customer.first_name,' ',customer.last_name) as customer, sum(payment.amount) from customer
+join payment 
+on customer.customer_id=payment.customer_id
+group by 1
+order by 3 desc;
+
+##11. What Store has historically brought the most revenue?
+
+select store.store_id, sum(amount) as revenue from store
+join inventory
+on store.store_id=inventory.store_id 
+join rental 
+on rental.inventory_id=inventory.inventory_id 
+join payment
+on payment.rental_id=rental.rental_id
+group by store.store_id
+order by 2 desc;
+
+##12.How many rentals do we have for each month?
+
+select DATE_FORMAT(rental_date , '%m') as rental_month, count(*) as rental_count from rental
+group by 1 order by 1;
+
+##13.Rentals per Month (such Jan => How much, etc)
+
+select DATE_FORMAT(rental_date , '%m/%y') as rental_month, sum(payment.amount) from rental
+join payment on rental.rental_id=payment.rental_id
+group by 1 order by 1;
+
+##14.Which date the first movie was rented out?
+select rental_date,film.title from rental join inventory 
+on 
+inventory.inventory_id=rental.inventory_id
+join film on film.film_id=inventory.film_id
+order by rental_date limit 1;
+
+##15.Which date the last movie was rented out?
+select rental_date,film.title from rental join inventory 
+on 
+inventory.inventory_id=rental.inventory_id
+join film on film.film_id=inventory.film_id
+order by rental_date desc limit 1;
+
+##16.For each movie, when was the first time and last time it was rented out?
+select max(rental_date) as last_time,
+min(rental_date) as first_time,
+film.title from rental join inventory 
+on 
+inventory.inventory_id=rental.inventory_id
+join film on film.film_id=inventory.film_id
+group by film.title
+order by 3;
+
+##17.What is the Last Rental Date of every customer?
+select rental.customer_id,max(rental.rental_date) from rental
+group by rental.customer_id 
+order by 2 desc;
+
+##18.What is our Revenue Per Month?
+select DATE_FORMAT(rental_date , '%m/%y') as rental_month, sum(payment.amount) from rental
+join payment on rental.rental_id=payment.rental_id
+group by 1 order by 1;
+
+##19.How many distinct Renters do we have per month?
+
