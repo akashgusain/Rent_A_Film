@@ -125,3 +125,46 @@ group by 1
 order by 1;
 
 ##21.Number of Rentals in Comedy, Sports, and Family
+select category.name, count(rental_id) from rental join inventory 
+on 
+inventory.inventory_id=rental.inventory_id
+join film on film.film_id=inventory.film_id
+join film_category on film.film_id=film_category.film_id
+join category on film_category.category_id=category.category_id
+group by 1
+order by 1;
+
+##22.Users who have been rented at least 3 times
+
+select rental.customer_id,count(rental.customer_id) as count_customer_id,concat(customer.first_name,' ',customer.last_name) as customer_name from rental join customer on
+customer.customer_id=rental.customer_id
+group by customer_id having count(rental.customer_id) >=3 ;
+
+##23.How much revenue has one single store made over PG13 and R-rated films?
+select store.store_id,sum(payment.amount) as revenue from rental join inventory 
+on 
+inventory.inventory_id=rental.inventory_id
+join store on store.store_id=inventory.store_id
+join film on film.film_id=inventory.film_id
+join payment on payment.rental_id=rental.rental_id
+where film.rating in('PG-13','R')
+group by store.store_id
+;
+
+##24.Active User where active = 1
+select first_name,last_name, active from customer where active=1;
+
+##25.Reward Users: who has rented at least 30 times
+select rental.customer_id,count(rental.customer_id) as count_customer_id,concat(customer.first_name,' ',customer.last_name) as customer_name from rental join customer on
+customer.customer_id=rental.customer_id
+group by customer_id having count(rental.customer_id) >=30 ;
+
+##26.Reward Users who are also active
+select rental.customer_id,count(rental.customer_id) as count_customer_id,
+concat(customer.first_name,' ',customer.last_name) as customer_name from rental 
+join customer on
+customer.customer_id=rental.customer_id
+where customer.active=1
+group by customer_id having count(rental.customer_id) >=30 ;
+
+##27.All Rewards Users with Phone
